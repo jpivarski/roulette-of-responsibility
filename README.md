@@ -1,2 +1,3 @@
 # roulette-of-responsibility
-Make decisions for me
+
+https://jpivarski.github.io/roulette-of-responsibility/

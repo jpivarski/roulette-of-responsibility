@@ -37,26 +37,45 @@
 
 <script>
 
-function flick_on(element) {
-    element.style.backgroundColor = "#890c99";
-    element.style.color = "white";
+var old_index = null;
+var element = null;
+
+function flick_on() {
+    if (element) {
+        element.style.backgroundColor = "#890c99";
+        element.style.color = "white";
+    }
     setTimeout(function () {
-        flick_off(element);
+        flick_off();
     }, 200);
 }
 
-function flick_off(element) {
-    element.style.backgroundColor = "white";
-    element.style.color = "black";
+function flick_off() {
+    if (element) {
+        element.style.backgroundColor = "white";
+        element.style.color = "black";
+    }
     setTimeout(function () {
-        flick_on(element);
+        flick_on();
     }, 200);
 }
 
 function pick_something() {
+    element = null;
     var items = document.getElementById("box").children;
-    var index = Math.floor(((Math.random())) * items.length);
-    flick_on(items[index].firstChild);
+    for (var item of items) {
+        item.firstChild.style.backgroundColor = "white";
+        item.firstChild.style.color = "black";
+    }
+
+    var index = old_index;
+    while (index == old_index) {
+        index = Math.floor(((Math.random())) * items.length);
+    }
+    old_index = index;
+
+    console.log(index);
+    element = items[index].firstChild;
 }
 
 function add_task() {
@@ -125,6 +144,7 @@ function load() {
 }
 
 load();
+flick_on();
 
 </script>
 </body>
