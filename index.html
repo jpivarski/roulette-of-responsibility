@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+
+#box div {
+    margin-bottom: 15px;
+}
+#box div div {
+    border: 1px solid grey;
+    width: 480px;
+    font-size: 200%;
+    display: inline-block;
+    padding: 2px;
+}
+#box div button {
+    width: 100px;
+    font-size: 200%;
+    margin-left: 5px;
+}
+
+</style>
+<title>Roulette of responsibilitude</title>
+</head>
+
+<body>
+<button id="pick" onclick="pick_something()" style="width: 250px; font-size: 200%; margin-left: auto; margin-right: auto; margin-top: 30px; margin-bottom: 60px; display: block;">pick something</button>
+<div id="box" style="border: 1px solid black; margin-top: 30px; margin-bottom: 30px; margin-left: auto; margin-right: auto; padding: 30px; padding-bottom: 15px; width: 600px;"></div>
+<div style="margin-left: auto; margin-right: auto; padding: 30px; width: 50%; width: 600px;">
+<input id="new-text" type="text" placeholder="new task" style="width: 480px; font-size: 200%;">
+<button id="new" onclick="add_task()" style="width: 100px; font-size: 200%;">add</button>
+</div>
+<div style="margin-left: auto; margin-right: auto; width: 50%; width: 600px;">
+<button id="clear" onclick="clear_all()" style="width: 150px; font-size: 200%; margin-left: auto; margin-right: auto; display: block;">clear all</button>
+</div>
+
+<script>
+
+function flick_on(element) {
+    element.style.backgroundColor = "#890c99";
+    element.style.color = "white";
+    setTimeout(function () {
+        flick_off(element);
+    }, 200);
+}
+
+function flick_off(element) {
+    element.style.backgroundColor = "white";
+    element.style.color = "black";
+    setTimeout(function () {
+        flick_on(element);
+    }, 200);
+}
+
+function pick_something() {
+    var items = document.getElementById("box").children;
+    var index = Math.floor(((Math.random())) * items.length);
+    flick_on(items[index].firstChild);
+}
+
+function add_task() {
+    var text = document.getElementById("new-text").value.trim();
+    if (text === "") {
+        alert("Don't give me that.");
+        return;
+    }
+
+    var box = document.getElementById("box");
+    var item = document.createElement("div");
+
+    var item_text = document.createElement("div");
+    item_text.innerText = text;
+    item.appendChild(item_text);
+
+    var del = document.createElement("button");
+    del.textContent = "delete";
+    add_del_function(item, del);
+
+    item.appendChild(del);
+    box.appendChild(item);
+
+    document.getElementById("new-text").value = "";
+
+    save();
+}
+
+function add_del_function(item, del) {
+    del.onclick = function() {
+        item.remove();
+        save();
+    };
+}
+
+function clear_all() {
+    var box = document.getElementById("box");
+    box.innerHTML = "";
+    save();
+}
+
+function save() {
+    var box = document.getElementById("box");
+    localStorage.setItem("box", box.innerHTML);
+}
+
+function load() {
+    var text = document.getElementById("new-text");
+
+    text.addEventListener("keyup", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            add_task();
+        }
+    });
+
+    var box = document.getElementById("box");
+    var saved = localStorage.getItem("box");
+    if (saved) {
+        box.innerHTML = saved;
+    }
+
+    for (var item of box.children) {
+        add_del_function(item, item.lastChild);
+    }
+}
+
+load();
+
+</script>
+</body>
+</html>
